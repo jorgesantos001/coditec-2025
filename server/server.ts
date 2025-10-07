@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import { fetchEstadosCidades } from "./config/IbgeApi";
 import dotenv from "dotenv";
+import usuarioRouter from "./src/routes/usuario.routes";
 dotenv.config({ path: "../.env" });
 const bcrypt = require("bcrypt");
 const app = express();
@@ -421,6 +422,8 @@ const validateLogin = async (user_email: string, user_password?: string) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+app.use("/api", usuarioRouter);
+
 app.get("/api/campanhas/:id?", async (req: Request, res: Response) => {
   const id = req.params.id || null;
   const campanhasResponse = await campanhas(id);
@@ -552,72 +555,72 @@ app.post("/api/doacoes", async (req: Request, res: Response) => {
   }
 });
 
-app.post("/api/usuarioCadastro", async (req: Request, res: Response) => {
-  const userInfos = req.body.user_infos;
+// app.post("/api/usuarioCadastro", async (req: Request, res: Response) => {
+//   const userInfos = req.body.user_infos;
 
-  try {
-    const hashedPassword = await bcrypt.hash(userInfos.cd_senha_usuario, salt);
-    userInfos.cd_senha_usuario = hashedPassword;
-    const userResponse = await prisma.usuario.create({
-      data: userInfos,
-    });
+//   try {
+//     const hashedPassword = await bcrypt.hash(userInfos.cd_senha_usuario, salt);
+//     userInfos.cd_senha_usuario = hashedPassword;
+//     const userResponse = await prisma.usuario.create({
+//       data: userInfos,
+//     });
 
-    // Como não existe mais o 'ops', utilize o insertedId
-    res.json({ _id: userResponse.insertedId, ...userInfos });
-  } catch (err) {
-    console.error("Error while registering user:", err);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
+//     // Como não existe mais o 'ops', utilize o insertedId
+//     res.json({ _id: userResponse.insertedId, ...userInfos });
+//   } catch (err) {
+//     console.error("Error while registering user:", err);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
 
-app.post("/api/usuarioLogin", async (req: Request, res: Response) => {
-  const { user_email, user_password } = req.body;
+// app.post("/api/usuarioLogin", async (req: Request, res: Response) => {
+//   const { user_email, user_password } = req.body;
 
-  try {
-    const userResponse = await prisma.usuario.findFirst({
-      where: {
-        cd_email_usuario: user_email,
-      },
-    });
+//   try {
+//     const userResponse = await prisma.usuario.findFirst({
+//       where: {
+//         cd_email_usuario: user_email,
+//       },
+//     });
 
-    if (!userResponse) {
-      return res.status(400).json({
-        user: null,
-        authenticated: false,
-        message: "Email ou senha inválidos",
-      });
-    }
+//     if (!userResponse) {
+//       return res.status(400).json({
+//         user: null,
+//         authenticated: false,
+//         message: "Email ou senha inválidos",
+//       });
+//     }
 
-    const hashPasswordDB = userResponse.cd_senha_usuario;
+//     const hashPasswordDB = userResponse.cd_senha_usuario;
 
-    if (user_password && hashPasswordDB) {
-      const compare = await bcrypt.compare(user_password, hashPasswordDB);
+//     if (user_password && hashPasswordDB) {
+//       const compare = await bcrypt.compare(user_password, hashPasswordDB);
 
-      if (compare) {
-        return res.status(200).json({
-          user: userResponse,
-          authenticated: true,
-          message: "Usuário autenticado",
-        });
-      } else {
-        return res.status(400).json({
-          user: null,
-          authenticated: false,
-          message: "Email ou senha inválidos",
-        });
-      }
-    } else {
-      return res.status(400).json({
-        user: null,
-        authenticated: false,
-        message: "Erro ao resgatar dados",
-      });
-    }
-  } catch (error) {
-    console.error("Error during login:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});
+//       if (compare) {
+//         return res.status(200).json({
+//           user: userResponse,
+//           authenticated: true,
+//           message: "Usuário autenticado",
+//         });
+//       } else {
+//         return res.status(400).json({
+//           user: null,
+//           authenticated: false,
+//           message: "Email ou senha inválidos",
+//         });
+//       }
+//     } else {
+//       return res.status(400).json({
+//         user: null,
+//         authenticated: false,
+//         message: "Erro ao resgatar dados",
+//       });
+//     }
+//   } catch (error) {
+//     console.error("Error during login:", error);
+//     res.status(500).json({ message: "Internal Server Error" });
+//   }
+// });
 
 app.listen(5000, () => {
   console.log("Server started on port 5000");
