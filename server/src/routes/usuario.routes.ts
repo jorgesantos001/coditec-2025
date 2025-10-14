@@ -26,4 +26,6 @@ usuarioRouter.post(
   usuarioController.login
 );
 
+usuarioRouter.get("/usuarios", usuarioController.getUsers);
+
 export default usuarioRouter;

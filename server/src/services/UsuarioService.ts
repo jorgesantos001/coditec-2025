@@ -79,4 +79,15 @@ export default class UsuarioService {
     const { cd_senha_usuario, ...usuarioSemSenha } = usuario;
     return usuarioSemSenha;
   }
+
+  public async buscarUsuarios() {
+    const usuarios = await this.prisma.usuario.findMany();
+
+    const usuariosSemSenha = usuarios.map((usuario) => {
+      const { cd_senha_usuario, ...usuarioSemSenha } = usuario;
+      return usuarioSemSenha;
+    });
+
+    return usuariosSemSenha;
+  }
 }
