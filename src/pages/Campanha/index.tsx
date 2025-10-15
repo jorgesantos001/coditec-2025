@@ -8,6 +8,7 @@ import axios from "axios";
 
 import { ICampanhaAlimento } from "../../types/ICampanha";
 import { UserContext } from "../../contexts/userContext";
+import api from "../../services/api";
 
 export const Campanha = () => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export const Campanha = () => {
 
   useEffect(() => {
     if (_id) {
-      axios
+      api
         .get<ICampanhaAlimento>(url)
         .then((response) => {
           let campanhaData = response.data;
@@ -121,7 +122,7 @@ export const Campanha = () => {
 
     const dbInsert = async () => {
       try {
-        const response = await axios.post("/api/doacoes", {
+        const response = await api.post("/api/doacoes", {
           infos_doacao: infos_doacao,
           alimentos_doacao: alimentos_doacao,
         });

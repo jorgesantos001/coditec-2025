@@ -14,6 +14,7 @@ import {} from "../../";
 import { IAlimento, IAlimentoLista } from "../../types/IAlimento";
 import { IEstadoCidades } from "../../types/IEstadoCidade";
 import { UserContext } from "../../contexts/userContext";
+import api from "../../services/api";
 
 interface FoodProps {
   id: any;
@@ -28,7 +29,7 @@ const Food: React.FC<FoodProps> = ({ id, delFood }) => {
   const [alimentoSelecionado, setAlimentoSelecionado] = useState<IAlimento>();
 
   useEffect(() => {
-    axios
+    api
       .get<IAlimentoLista[]>("/api/alimentos")
       .then((response) => setListaCategoriaAlimentos(response.data))
       .catch((err) => console.log("Error: " + err));
@@ -176,7 +177,7 @@ export const CriacaoCampanha = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
+    api
       .get("/api/estadosCidades")
       .then((response) => setListaEstadosCidades(response.data))
       .catch((err) => console.log("Error: " + err));
@@ -324,7 +325,7 @@ export const CriacaoCampanha = () => {
 
     const dbInsert = async () => {
       try {
-        const response = await axios.post("/api/campanhas", {
+        const response = await api.post("/api/campanhas", {
           infos_campanha,
           alimentos_campanha,
         });
