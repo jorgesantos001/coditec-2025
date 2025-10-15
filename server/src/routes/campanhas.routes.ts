@@ -4,6 +4,7 @@ import validateRequest from "../middlewares/validateRequest";
 import { criarCampanhaSchema } from "../schemas/campanha.schema";
 import CampanhaService from "../services/CampanhaService";
 import CampanhaController from "../controllers/CampanhaController";
+import authMiddleware from "../middlewares/authMiddleware";
 
 const prisma = new PrismaClient();
 const campanhaService = new CampanhaService(prisma);
@@ -13,6 +14,7 @@ const campanhaRouter = Router();
 
 campanhaRouter.post(
   "/campanhas",
+  authMiddleware,
   validateRequest(criarCampanhaSchema),
   campanhaController.create
 );

@@ -7,6 +7,7 @@ import {
   criarUsuarioSchema,
   loginUsuarioSchema,
 } from "../schemas/usuario.schema";
+import authMiddleware from "../middlewares/authMiddleware";
 
 const prisma = new PrismaClient();
 const usuarioService = new UsuarioService(prisma);
@@ -26,6 +27,8 @@ usuarioRouter.post(
   usuarioController.login
 );
 
-usuarioRouter.get("/usuarios", usuarioController.getUsers);
+usuarioRouter.get("/usuarios", authMiddleware, usuarioController.getUsers);
+
+usuarioRouter.get("/perfil", authMiddleware, usuarioController.getProfile);
 
 export default usuarioRouter;
