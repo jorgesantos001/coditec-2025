@@ -15,8 +15,8 @@ import { Toaster } from "sonner";
 
 function App() {
   return (
-    <AuthProvider>
-      <UserProvider>
+    <UserProvider>
+      <AuthProvider>
         <Toaster richColors position="bottom-right" duration={3000} />
         <BrowserRouter>
           <Routes>
@@ -29,8 +29,8 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
-      </UserProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </UserProvider>
   );
 }
 
