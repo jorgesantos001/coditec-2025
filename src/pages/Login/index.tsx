@@ -8,6 +8,7 @@ import { UserContext } from "../../contexts/userContext";
 import { IUsuario } from "../../types/IUsuario";
 import axios from "axios";
 import api from "../../services/api";
+import { toast } from "sonner";
 
 export const Login = () => {
   const [visiblePass, setVisiblePass] = useState(false);
@@ -34,7 +35,7 @@ export const Login = () => {
     const user_password = event.target.password.value;
 
     if (!user_email || !user_password) {
-      alert("Por favor, preencha todos os campos.");
+      toast.error("Por favor preencha todos os campos");
       return;
     }
     const userLogin = async () => {
@@ -76,13 +77,21 @@ export const Login = () => {
             setUser(data.user);
             navigate("/descobrir");
           } else {
-            console.log("Usuario ou senha inválidos", data);
-            alert("Usuario ou senha inválidos. Por favor, tente novamente.");
+            toast.error(
+              "Usuario ou senha inválidos. Por favor, tente novamente."
+            );
           }
         }
       } catch (error) {
-        console.error("Erro ao fazer login", error);
-        alert("Usuario ou senha inválidos. Por favor, tente novamente.");
+        if (axios.isAxiosError(error) && error.response) {
+          const errorMessage = error.response.data.message;
+          toast.error(errorMessage || "Ocorreu um erro desconhecido.");
+        } else {
+          toast.error(
+            "Não foi possível conectar ao servidor. Tente novamente."
+          );
+          console.error("Erro inesperado:", error);
+        }
       }
     };
 

@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { ICampanhaAlimento } from "../../types/ICampanha";
 import { IEstadoCidades } from "../../types/IEstadoCidade";
 import api from "../../services/api";
+import { toast } from "sonner";
 
 export const Descobrir = () => {
   const [campanhas, setCampanhas] = useState<ICampanhaAlimento[]>([]);
@@ -91,7 +92,7 @@ export const Descobrir = () => {
     event.preventDefault();
 
     if (!estadoSelecionado || !cidadeSelecionada) {
-      alert("Por favor, selecione um estado e uma cidade.");
+      toast.error("Por favor, selecione um estado e uma cidade.");
       return;
     }
     fetchCampanhas(estadoSelecionado, cidadeSelecionada);
