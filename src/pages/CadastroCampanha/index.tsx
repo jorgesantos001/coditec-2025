@@ -15,6 +15,7 @@ import { IAlimento, IAlimentoLista } from "../../types/IAlimento";
 import { IEstadoCidades } from "../../types/IEstadoCidade";
 import { UserContext } from "../../contexts/userContext";
 import api from "../../services/api";
+import { toast } from "sonner";
 
 interface FoodProps {
   id: any;
@@ -246,33 +247,33 @@ export const CriacaoCampanha = () => {
 
   const validateCampanha = (event: any, qtAlimentos: number) => {
     if (!event.target.nm_titulo_campanha.value) {
-      alert("Título da campanha é obrigatório");
+      toast.error("O campo de nome da campanha é obrigatório");
       return false;
     }
 
     if (!event.target.dt_encerramento_campanha.value) {
-      alert("Data de encerramento da campanha é obrigatória");
+      toast.error("O campo de data de encerramento é obrigatório");
       return false;
     }
 
     if (!event.target.sg_estado_campanha.value) {
-      alert("Estado de entrega é obrigatório");
+      toast.error("O Estado de entrega é obrigatório");
       return false;
     }
 
     if (!event.target.nm_cidade_campanha.value) {
-      alert("Cidade de entrega é obrigatória");
+      toast.error("A Cidade de entrega é obrigatória");
       return false;
     }
 
     if (qtAlimentos < 1) {
-      alert("Deve haver pelo menos um alimento cadastrado");
+      toast.error("Deve haver pelo menos um alimento cadastrado na campanha");
       return false;
     }
 
     if (qtAlimentos === 1) {
       if (!event.target.id.value || !event.target.qt_alimento_meta.value) {
-        alert("Todos os campos de alimento devem ser preenchidos");
+        toast.error("Todos os campos de alimento devem ser preenchidos");
         return false;
       }
     } else {
@@ -281,7 +282,7 @@ export const CriacaoCampanha = () => {
           !event.target.id[i].value ||
           !event.target.qt_alimento_meta[i].value
         ) {
-          alert("Todos os campos de alimento devem ser preenchidos");
+          toast.error("Todos os campos de alimento devem ser preenchidos");
           return false;
         }
       }

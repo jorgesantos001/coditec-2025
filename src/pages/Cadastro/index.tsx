@@ -4,6 +4,7 @@ import { Navbar } from "../../components/Navbar";
 import axios from "axios";
 import { IEstadoCidades } from "../../types/IEstadoCidade";
 import api from "../../services/api";
+import { toast } from "sonner";
 
 export const Cadastro = () => {
   const [tipo_usuario, setTipoUsuario] = useState<string>("pf");
@@ -57,47 +58,49 @@ export const Cadastro = () => {
 
   const validateForm = (event: any, tipo_usuario: string) => {
     if (!nm_usuario) {
-      alert("Nome é obrigatório");
+      toast.error("Nome é obrigatório");
       return false;
     }
 
     if (!ch_documento_usuario) {
-      alert(tipo_usuario === "pf" ? "CPF é obrigatório" : "CNPJ é obrigatório");
+      toast.error(
+        tipo_usuario === "pf" ? "CPF é obrigatório" : "CNPJ é obrigatório"
+      );
       return false;
     }
 
     if (!cd_email_usuario) {
-      alert("Email é obrigatório");
+      toast.error("Email é obrigatório");
       return false;
     }
 
     if (!nr_celular_usuario) {
-      alert("Celular é obrigatório");
+      toast.error("Celular é obrigatório");
       return false;
     }
 
     if (!cd_senha_usuario) {
-      alert("Senha é obrigatória");
+      toast.error("Senha é obrigatória");
       return false;
     }
 
     if (!cd_senha_usuario_confirmacao) {
-      alert("Confirme sua senha");
+      toast.error("Confirme sua senha");
       return false;
     }
 
     if (cd_senha_usuario_confirmacao !== cd_senha_usuario) {
-      alert("A confirmação da senha deve ser igual à senha");
+      toast.error("A confirmação da senha deve ser igual à senha");
       return false;
     }
 
     if (!sg_estado_usuario) {
-      alert("Estado é obrigatório");
+      toast.error("Estado é obrigatório");
       return false;
     }
 
     if (!nm_cidade_usuario) {
-      alert("Cidade é obrigatória");
+      toast.error("Cidade é obrigatória");
       return false;
     }
 
@@ -146,29 +149,35 @@ export const Cadastro = () => {
       };
     }
 
-    const dbInsert = async () => {
+    // NOVA LÓGICA COM TOAST
+    const handleDBInsert = async () => {
       try {
         const response = await api.post("/api/usuarioCadastro", {
           user_infos: user_infos,
         });
-        return [response.status, response.data];
-      } catch (error) {
-        console.error("Erro:", error);
-        throw error;
-      }
-    };
 
-    const handleDBInsert = async () => {
-      try {
-        const [responseStatus, responseData] = await dbInsert();
-        if (responseStatus !== 200) {
-          console.log("Erro ao salvar dados no banco");
-        } else {
-          console.log("Sucesso ao salvar dados no banco ", responseData);
-          navigate("/login");
-        }
+        const successMessage = response.data.message;
+        toast.success(successMessage || "Cadastro realizado com sucesso!");
+
+        navigate("/login");
       } catch (error) {
-        console.error("Erro ao inserir dados:", error);
+        if (axios.isAxiosError(error) && error.response) {
+          const responseData = error.response.data;
+          if (responseData.errors && responseData.errors.user_infos) {
+            const specificError = responseData.errors.user_infos[0];
+            toast.error(specificError);
+          } else if (responseData.message) {
+            toast.error(responseData.message);
+          } else {
+            toast.error(
+              "Não foi possível realizar o cadastro. Tente novamente."
+            );
+          }
+        } else {
+          // Erro genérico (ex: rede)
+          toast.error("Erro de conexão. Tente novamente mais tarde.");
+          console.error("Erro inesperado:", error);
+        }
       }
     };
 

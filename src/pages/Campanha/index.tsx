@@ -9,6 +9,7 @@ import axios from "axios";
 import { ICampanhaAlimento } from "../../types/ICampanha";
 import { UserContext } from "../../contexts/userContext";
 import api from "../../services/api";
+import { toast } from "sonner";
 
 export const Campanha = () => {
   const navigate = useNavigate();
@@ -84,7 +85,7 @@ export const Campanha = () => {
   function handleSubmit(event: any) {
     event.preventDefault();
     if (user.user.id === "") {
-      alert("Por favor, faça login");
+      toast.error("Por favor, efetue o login.");
       return;
     }
     let infos_doacao = {
@@ -114,7 +115,7 @@ export const Campanha = () => {
       !alimentos_doacao ||
       (Array.isArray(alimentos_doacao) && alimentos_doacao.length === 0)
     ) {
-      alert("Doação vazia.");
+      toast.error("Por favor, doe ao menos um alimento.");
       return;
     }
 
