@@ -8,6 +8,8 @@ export default class UsuarioController {
     this.usuarioService = usuarioService;
     this.create = this.create.bind(this);
     this.login = this.login.bind(this);
+    this.getUsers = this.getUsers.bind(this);
+    this.getProfile = this.getProfile.bind(this);
   }
 
   public async create(req: Request, res: Response): Promise<Response> {
@@ -32,12 +34,13 @@ export default class UsuarioController {
     try {
       const dadosLogin = req.body;
 
-      const usuarioAutenticado = await this.usuarioService.autenticarUsuario(
+      const { user, token } = await this.usuarioService.autenticarUsuario(
         dadosLogin
       );
 
       return res.status(200).json({
-        user: usuarioAutenticado,
+        user,
+        token,
         authenticated: true,
         message: "Usuário autenticado",
       });
@@ -53,5 +56,25 @@ export default class UsuarioController {
       console.error("Erro durante o login:", error);
       return res.status(500).json({ message: "Erro interno do servidor" });
     }
+  }
+
+  public async getUsers(req: Request, res: Response): Promise<Response> {
+    try {
+      const usuarios = await this.usuarioService.buscarUsuarios();
+      return res.status(200).json(usuarios);
+    } catch (error: any) {
+      console.error("Erro ao buscar usuários:", error);
+      return res.status(500).json({ message: "Erro ao buscar usuários" });
+    }
+  }
+
+  public async getProfile(req: Request, res: Response): Promise<Response> {
+    const usuarioLogado = req.user;
+
+    if (!usuarioLogado) {
+      return res.status(401).json({ message: "Usuário não autenticado" });
+    }
+
+    return res.status(200).json(usuarioLogado);
   }
 }

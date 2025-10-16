@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import { CriarUsuarioDTO, LogarUsuarioDTO } from "../schemas/usuario.schema";
+import * as jwt from "jsonwebtoken";
 
 export default class UsuarioService {
   private prisma: PrismaClient;
@@ -76,7 +77,30 @@ export default class UsuarioService {
       throw new Error("Email ou senha inválidos");
     }
 
+    const jwtPayload = {
+      id: usuario.id,
+      email: usuario.cd_email_usuario,
+      is_admin: usuario.fg_admin,
+    };
+
+    const jwtSecret = process.env.JWT_SECRET! as string;
+
+    const token = jwt.sign(jwtPayload, jwtSecret, {
+      expiresIn: "2h",
+    });
+
     const { cd_senha_usuario, ...usuarioSemSenha } = usuario;
-    return usuarioSemSenha;
+    return { user: usuarioSemSenha, token: token };
+  }
+
+  public async buscarUsuarios() {
+    const usuarios = await this.prisma.usuario.findMany();
+
+    const usuariosSemSenha = usuarios.map((usuario) => {
+      const { cd_senha_usuario, ...usuarioSemSenha } = usuario;
+      return usuarioSemSenha;
+    });
+
+    return usuariosSemSenha;
   }
 }
