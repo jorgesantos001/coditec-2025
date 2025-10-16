@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Footer } from "../../components/Footer";
 import { Navbar } from "../../components/Navbar";
 
@@ -10,11 +9,11 @@ import api from "../../services/api";
 
 export const Descobrir = () => {
   const [campanhas, setCampanhas] = useState<ICampanhaAlimento[]>([]);
-  const [qtAlimentos, setQtAlimentos] = useState<number>(1);
   const [listaEstadosCidades, setListaEstadosCidades] = useState<
     IEstadoCidades[]
   >([]);
   const [listaCidades, setListaCidades] = useState<string[]>([]);
+  const [estadoSelecionado, setEstadoSelecionado] = useState<string>("");
   const [cidadeSelecionada, setCidadeSelecionada] = useState<string>("");
 
   useEffect(() => {
@@ -46,29 +45,70 @@ export const Descobrir = () => {
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const selectedEstado = event.target.value;
+    setEstadoSelecionado(selectedEstado);
+
+    if (!selectedEstado) {
+      setListaCidades([]);
+      setCidadeSelecionada("");
+      return;
+    }
+
     const estado = listaEstadosCidades.find(
       (estado) => estado.sg_estado === selectedEstado
     )!.cidades;
-    setListaCidades(estado);
+    if (estado) {
+      setListaCidades(estado);
+      setCidadeSelecionada("");
+    }
   };
 
   const handleChangeCidadeSelecionada = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
-    const selectCidade = event.target.value;
-    const cidade = listaCidades.find((cidade) => cidade === selectCidade)!;
-    setCidadeSelecionada(cidade);
+    setCidadeSelecionada(event.target.value);
+  };
+
+  const fetchCampanhas = async (estado?: string, cidade?: string) => {
+    try {
+      const endpoint =
+        estado && cidade
+          ? `/api/campanhas/buscar?sg_estado_campanha=${estado}&nm_cidade_campanha=${cidade}`
+          : "/api/campanhas";
+
+      const response = await api.get(endpoint);
+      setCampanhas(response.data);
+    } catch (err) {
+      console.log("Erro ao buscar campanhas: " + err);
+      setCampanhas([]);
+    }
   };
 
   useEffect(() => {
-    api
-      .get("/api/campanhas")
-      .then((response) => {
-        setCampanhas(response.data);
-      })
-      .catch((err) => {
-        console.log("Error: " + err);
-      });
+    fetchCampanhas();
+  }, []);
+
+  const handleBuscarCampanhas = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!estadoSelecionado || !cidadeSelecionada) {
+      alert("Por favor, selecione um estado e uma cidade.");
+      return;
+    }
+    fetchCampanhas(estadoSelecionado, cidadeSelecionada);
+  };
+
+  const handleLimparFiltros = () => {
+    // Reseta os estados dos selects
+    setEstadoSelecionado("");
+    setCidadeSelecionada("");
+    setListaCidades([]); // Limpa a lista de cidades para forçar nova seleção
+
+    // Chama a busca sem filtros para mostrar tudo de novo
+    fetchCampanhas();
+  };
+
+  useEffect(() => {
+    fetchCampanhas();
   }, []);
 
   function contarProgresso(
@@ -85,28 +125,6 @@ export const Descobrir = () => {
     }
   }
 
-  function contarTempoRestante(
-    anos: number,
-    meses: number,
-    dias: number,
-    horas: number,
-    minutos: number
-  ) {
-    if (anos > 0) {
-      return `Expira em: ${anos} anos`;
-    } else if (meses > 0) {
-      return `Expira em: ${meses} meses`;
-    } else if (dias > 0) {
-      return `Expira em: ${dias} dias`;
-    } else if (horas > 0) {
-      return `Expira em: ${horas} horas`;
-    } else if (minutos > 0) {
-      return `Expira em: ${minutos} minutos`;
-    } else {
-      return "Campanha encerrada";
-    }
-  }
-
   return (
     campanhas && (
       <>
@@ -117,6 +135,7 @@ export const Descobrir = () => {
               className="filtro-campanhas column"
               action="/descobrir/"
               method="GET"
+              onSubmit={handleBuscarCampanhas}
             >
               <h1 className="titulo white">Insira o estado e a cidade</h1>
               <h2 className="sub titulo white">
@@ -124,29 +143,63 @@ export const Descobrir = () => {
               </h2>
               <div className="row">
                 <select
-                  name="estado"
+                  name="sg_estado_campanha"
                   className="input-form"
                   id="estadoCampanha"
+                  value={estadoSelecionado}
+                  onChange={handleChangeEstadoSelecionado}
                 >
-                  <option value="0">Selecione o Estado</option>
+                  {/* Opção Padrão */}
+                  <option value="">Selecione o Estado</option>
+
+                  {listaEstadosCidades.map((estado) => (
+                    <option key={estado.sg_estado} value={estado.sg_estado}>
+                      {estado.sg_estado}
+                    </option>
+                  ))}
                 </select>
-                <input type="hidden" name="state" />
+
                 <select
-                  name="cidade"
+                  name="nm_cidade_campanha"
                   className="input-form"
                   id="cidadeCampanha"
+                  value={cidadeSelecionada}
+                  onChange={handleChangeCidadeSelecionada}
+                  disabled={!estadoSelecionado}
                 >
-                  <option value="0">Seleciona a Cidade</option>
+                  {/* Opção Padrão */}
+                  <option value="">Selecione a Cidade</option>
+
+                  {listaCidades.map((cidade) => (
+                    <option key={cidade} value={cidade}>
+                      {cidade}
+                    </option>
+                  ))}
                 </select>
                 <button className="btn yellow" type="submit">
                   Procurar
+                </button>
+
+                <button
+                  className="btn gray"
+                  type="button"
+                  onClick={handleLimparFiltros}
+                >
+                  Limpar
                 </button>
               </div>
             </form>
           </div>
 
           <div className="campanhas-container column">
-            <h1 className="titulo black">Campanhas mais recentes</h1>
+            {campanhas.length <= 0 && (
+              <h1 className="titulo black">
+                Nenhuma campanha encontrada para a localização selecionada
+              </h1>
+            )}
+            {campanhas.length > 0 && (
+              <h1 className="titulo black">Campanhas mais recentes</h1>
+            )}
             <div className="campanhas row">
               {campanhas.map((campanha) => (
                 <Link
@@ -237,13 +290,7 @@ export const Descobrir = () => {
                                 alt="Icone relógio"
                               />
                               <p className="expiraEm">
-                                {contarTempoRestante(
-                                  campanha.anos_restantes,
-                                  campanha.meses_restantes,
-                                  campanha.dias_restantes,
-                                  campanha.horas_restantes,
-                                  campanha.minutos_restantes
-                                )}
+                                Expira em: {campanha.dias_restantes} dias
                               </p>
                             </div>
 
