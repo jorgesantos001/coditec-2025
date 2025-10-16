@@ -21,6 +21,8 @@ campanhaRouter.post(
 
 campanhaRouter.get("/campanhas", campanhaController.getAll);
 
+campanhaRouter.get("/campanhas/buscar", campanhaController.findByLocation);
+
 campanhaRouter.get("/campanhas/:id", campanhaController.getById);
 
 export default campanhaRouter;

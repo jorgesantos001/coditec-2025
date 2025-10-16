@@ -71,6 +71,27 @@ export default class CampanhaService {
     return this.agregarDados(campanha);
   }
 
+  public async buscarPorLocal(
+    sg_estado_campanha: string,
+    nm_cidade_campanha: string
+  ) {
+    const campanhas = await this.prisma.campanha.findMany({
+      where: {
+        sg_estado_campanha,
+        nm_cidade_campanha,
+        dt_encerramento_campanha: { gt: new Date() },
+        fg_campanha_ativa: true,
+      },
+      orderBy: {
+        dt_encerramento_campanha: "desc",
+      },
+    });
+
+    return Promise.all(
+      campanhas.map((campanha) => this.agregarDados(campanha))
+    );
+  }
+
   /**
    * Método privado para agregar informações detalhadas a uma campanha.
    * Isso evita repetição de código entre `listarAtivas` e `buscarPorId`.
