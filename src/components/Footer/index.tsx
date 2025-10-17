@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 export const Footer = () => {
   return (
@@ -10,13 +10,13 @@ export const Footer = () => {
       />
       <ul className="menu-footer">
         <h2 className="sub titulo white">Ações sociais</h2>
-        <Link to="#">
+        <Link to="/campanhas/criar">
           <li className="list-item">Criar</li>
         </Link>
-        <Link to="#">
+        <Link to="/descobrir">
           <li className="list-item">Fazer doação</li>
         </Link>
-        <Link to="#">
+        <Link to="/descobrir">
           <li className="list-item">Descobrir</li>
         </Link>
       </ul>
