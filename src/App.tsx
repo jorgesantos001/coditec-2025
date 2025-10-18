@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import { AuthProvider } from "./contexts/authContext";
 import { UserProvider } from "./contexts/userContext";
 import { Home } from "./pages/Home";
@@ -8,11 +7,10 @@ import { Descobrir } from "./pages/Descobrir";
 import { Campanha } from "./pages/Campanha";
 import { Login } from "./pages/Login";
 import { Cadastro } from "./pages/Cadastro";
-
+import Perfil from "./pages/Perfil";
 import "./styles/main.scss";
 import { CriacaoCampanha } from "./pages/CadastroCampanha";
 import { Toaster } from "sonner";
-
 function App() {
   return (
     <UserProvider>
@@ -26,6 +24,7 @@ function App() {
             <Route path="/descobrir" element={<Descobrir />} />
             <Route path="/campanhas/:_id" element={<Campanha />} />
             <Route path="/campanhas/criar" element={<CriacaoCampanha />} />
+            <Route path="/perfil" element={<Perfil />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

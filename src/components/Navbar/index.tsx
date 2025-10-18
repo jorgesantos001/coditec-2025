@@ -92,7 +92,7 @@ export const Navbar: React.FC<HeaderProps> = ({ page }) => {
                       </Link>
                     </li>
                     <li className="toggle-link">
-                      <Link to="#" className="sub titulo">
+                      <Link to="/perfil" className="sub titulo">
                         Meus dados
                       </Link>
                     </li>
