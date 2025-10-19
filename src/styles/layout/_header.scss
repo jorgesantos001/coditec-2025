@@ -6,7 +6,7 @@
     z-index: 99;
     background: var(--white);
     margin: 0 auto;
-    padding: 3rem;
+    padding: 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -43,7 +43,7 @@
 
         .nav-link {
             display: inline-block;
-            font-size: 5rem;
+                    font-size: 2rem !important;
             font-weight: 100;
             margin-right: 2rem;
 
@@ -97,7 +97,7 @@
                 }
 
                 .sub.titulo {
-                    font-size: 2rem;
+                        font-size: 2rem;
                     margin: 0;
                     margin-left: 1.5rem;
                     font-weight: 500;

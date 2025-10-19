@@ -2,7 +2,7 @@
     min-height: calc(100vh - 8rem);
 
     .titulo-user {
-        font-size: 3rem;
+    font-size: 2rem;
         font-weight: 500;
     }
 
@@ -30,7 +30,7 @@
             margin-bottom: 5rem;
 
             p {
-                font-size: 1.8rem;
+                font-size: 1.5rem;
             }
 
             .user-wrapper {
@@ -81,7 +81,7 @@
         align-items: flex-start;
 
         .titulo-user {
-            font-size: 2.4rem;
+            font-size: 2rem;
             font-weight: bold;
             white-space: nowrap;
         }
@@ -109,7 +109,7 @@
 
                 h1 {
                     color: var(--gray-dark);
-                    font-size: 1.4rem;
+                    font-size: 1.3rem;
                     font-weight: normal;
 
                     &:first-child {
@@ -142,7 +142,7 @@
                         border-radius: 0.8rem;
 
                         h1 {
-                            font-size: 1.8rem;
+                            font-size: 1.5rem;
 
                             &:first-child {
                                 width: 18rem;
@@ -210,12 +210,12 @@
                 gap: 3rem;
 
                 h1 {
-                    font-size: 2.4rem;
+                    font-size: 2rem;
                     font-weight: 500;
                 }
 
                 p {
-                    font-size: 1.8rem;
+                    font-size: 1.5rem;
                     font-weight: 400;
                 }
 
@@ -230,7 +230,7 @@
                         background-color: var(--black-logo);
                     }
                     p {
-                        font-size: 1.8rem;
+                        font-size: 1.5rem;
                         font-weight: 500;
                     }
 
@@ -285,7 +285,7 @@
                 }
 
                 p {
-                    font-size: 1.8rem;
+                    font-size: 1.5rem;
                     font-weight: 400;
                 }
 
@@ -357,7 +357,7 @@
                             }
 
                             h1 {
-                                font-size: 3rem;
+                                font-size: 2rem;
                                 font-weight: bold;
                                 color: var(--red-denounce);
                             }
@@ -391,7 +391,7 @@
                                     border-radius: 0.8rem;
 
                                     h1 {
-                                        font-size: 1.8rem;
+                                        font-size: 1.5rem;
 
                                         &:first-child {
                                             width: 18rem;

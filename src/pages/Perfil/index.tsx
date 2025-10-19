@@ -65,73 +65,77 @@ const Perfil: React.FC = () => {
   return (
     <div className="perfil-container">
       <h2>Meu Perfil</h2>
-      <div className="perfil-foto">
-        <img src={fotoPreview || '/assets/profile/default.png'} alt="Foto de perfil" />
-        {editando && (
-          <input type="file" name="cd_foto_usuario" accept="image/*" onChange={handleFotoChange} />
-        )}
+      <div className="perfil-grid">
+        <div className="perfil-foto">
+          <img src={fotoPreview || '/assets/profile/default.png'} alt="Foto de perfil" />
+          {editando && (
+            <input type="file" name="cd_foto_usuario" accept="image/*" onChange={handleFotoChange} />
+          )}
+        </div>
+        <form onSubmit={handleSubmit} className="perfil-form">
+          <label>Nome:
+            <input
+              type="text"
+              name="nm_usuario"
+              value={form.nm_usuario}
+              onChange={handleChange}
+              disabled={!editando}
+            />
+          </label>
+          <label>Email:
+            <input
+              type="email"
+              name="cd_email_usuario"
+              value={form.cd_email_usuario}
+              onChange={handleChange}
+              disabled={!editando}
+            />
+          </label>
+          <label>Celular:
+            <input
+              type="tel"
+              name="nr_celular_usuario"
+              value={form.nr_celular_usuario || ''}
+              onChange={handleChange}
+              disabled={!editando}
+            />
+          </label>
+          <label>Estado:
+            <input
+              type="text"
+              name="sg_estado_usuario"
+              value={form.sg_estado_usuario || ''}
+              onChange={handleChange}
+              disabled={!editando}
+            />
+          </label>
+          <label>Cidade:
+            <input
+              type="text"
+              name="nm_cidade_usuario"
+              value={form.nm_cidade_usuario || ''}
+              onChange={handleChange}
+              disabled={!editando}
+            />
+          </label>
+          <label>Data de nascimento:
+            <input
+              type="date"
+              name="dt_nascimento_usuario"
+              value={form.dt_nascimento_usuario ? form.dt_nascimento_usuario.substring(0,10) : ''}
+              onChange={handleChange}
+              disabled={!editando}
+            />
+          </label>
+        </form>
       </div>
-      <form onSubmit={handleSubmit} className="perfil-form">
-        <label>Nome:
-          <input
-            type="text"
-            name="nm_usuario"
-            value={form.nm_usuario}
-            onChange={handleChange}
-            disabled={!editando}
-          />
-        </label>
-        <label>Email:
-          <input
-            type="email"
-            name="cd_email_usuario"
-            value={form.cd_email_usuario}
-            onChange={handleChange}
-            disabled={!editando}
-          />
-        </label>
-        <label>Celular:
-          <input
-            type="tel"
-            name="nr_celular_usuario"
-            value={form.nr_celular_usuario || ''}
-            onChange={handleChange}
-            disabled={!editando}
-          />
-        </label>
-        <label>Estado:
-          <input
-            type="text"
-            name="sg_estado_usuario"
-            value={form.sg_estado_usuario || ''}
-            onChange={handleChange}
-            disabled={!editando}
-          />
-        </label>
-        <label>Cidade:
-          <input
-            type="text"
-            name="nm_cidade_usuario"
-            value={form.nm_cidade_usuario || ''}
-            onChange={handleChange}
-            disabled={!editando}
-          />
-        </label>
-        <label>Data de nascimento:
-          <input
-            type="date"
-            name="dt_nascimento_usuario"
-            value={form.dt_nascimento_usuario ? form.dt_nascimento_usuario.substring(0,10) : ''}
-            onChange={handleChange}
-            disabled={!editando}
-          />
-        </label>
+      <div className="perfil-botao">
         {editando ? (
-          <button type="submit">Salvar</button>
+          <button type="submit" form="perfil-form">Salvar</button>
         ) : (
           <button type="button" onClick={() => setEditando(true)}>Editar</button>
         )}
-      </form>
+      </div>
     </div>
   );
 };
