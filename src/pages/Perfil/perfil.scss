@@ -1,3 +1,21 @@
+/* Estrutura e Container */
+.perfil-container {
+  max-width: 900px;
+  margin: 10rem auto 40px auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+  padding: 32px 24px;
+}
+
+.perfil-container h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #1976d2;
+  text-align: center;
+}
+
 .perfil-grid {
   display: flex;
   gap: 32px;
@@ -7,22 +25,66 @@
   flex-wrap: wrap;
 }
 
+/* Bloco da Foto */
 .perfil-foto {
   flex: 0 0 180px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 24px;
 }
 
+.perfil-foto img {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #eee;
+  margin-bottom: 24px;
+}
+
+/* Bloco do Formulário */
 .perfil-form {
   flex: 0 0 360px;
   width: 360px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px 24px;
+  gap: 16px 24px; /* O 'gap' já cuida do espaçamento entre os labels */
   align-items: start;
 }
 
+.perfil-form label {
+  display: block; /* 'display: flex' não era necessário */
+  font-size: 1.5rem;
+  font-weight: 500;
+  /* 'margin-bottom' removido pois o 'gap' do grid já faz isso */
+}
+
+/*
+  Aplicando o mesmo estilo para <input> e <select>
+*/
+.perfil-form input,
+.perfil-form select {
+  width: 100%;
+  padding: 8px 12px; /* Aumentei o padding lateral */
+  margin-top: 4px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1.8rem;
+  font-family: inherit; /* Garante que o <select> use a fonte correta */
+  background-color: #fff; /* Garante fundo branco para o select no modo escuro */
+  box-sizing: border-box; /* Garante que padding não quebre o layout */
+}
+
+.perfil-form input:disabled,
+.perfil-form select:disabled {
+  background-color: #f0f0f0;
+  color: #555;
+  cursor: not-allowed;
+  border-color: #ddd;
+}
+
+/* Bloco do Botão (separado do form) */
 .perfil-botao {
   display: flex;
   justify-content: center;
@@ -49,94 +111,4 @@
 
 .perfil-botao button:hover {
   background: #a7cce9;
-}
-
-.perfil-container {
-  max-width: 900px;
-  margin: 10rem auto 40px auto;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
-  padding: 32px 24px;
-}
-
-.perfil-container h2 {
-  font-size: 2.5rem;
-  font-weight: 500;
-  font-weight: 700;
-  margin-bottom: 2rem;
-  color: #1976d2;
-  text-align: center;
-}
-
-.perfil-form label {
-  font-size: 1.5rem;
-  font-weight: 500;
-  display: flex;
-  flex-direction: column;
-}
-
-.perfil-form input {
-  width: 100%;
-  padding: 8px 12px;
-  margin-top: 2px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 2rem;
-}
-
-.perfil-form button {
-  font-size: 2rem;
-}
-
-.perfil-foto {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 24px;
-}
-
-.perfil-foto img {
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #eee;
-  margin-bottom: 24px;
-}
-
-.perfil-form label {
-  display: block;
-  margin-bottom: 16px;
-  font-weight: 500;
-}
-
-.perfil-form input {
-  width: 100%;
-  padding: 8px;
-  margin-top: 4px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 2rem;
-}
-
-.perfil-form button {
-  margin-top: 20px;
-  padding: 10px 24px;
-  border-radius: 6px;
-  border: none;
-  background: #1976d2;
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.perfil-form button[type="button"] {
-  background: #eee;
-  color: #333;
-}
-
-.perfil-form button:hover {
-  background: #1565c0;
 }
