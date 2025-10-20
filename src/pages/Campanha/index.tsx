@@ -39,6 +39,11 @@ export const Campanha = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleCloseModal = () => {
+    if (!user.user || !user.user.id || user.user.id === "") {
+      toast.error("Por favor, efetue o login para doar.");
+      navigate("/login");
+      return;
+    }
     setModalVisible(!modalVisible);
   };
 
@@ -84,8 +89,9 @@ export const Campanha = () => {
 
   function handleSubmit(event: any) {
     event.preventDefault();
-    if (user.user.id === "") {
+    if (!user.user.id || user.user.id === "") {
       toast.error("Por favor, efetue o login.");
+      navigate("/login");
       return;
     }
     let infos_doacao = {

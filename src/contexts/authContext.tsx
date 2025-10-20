@@ -35,19 +35,21 @@ const AuthProvider = ({ children }: any) => {
     const token = localStorage.getItem("authToken");
     const userData = localStorage.getItem("userData");
 
-    // Se ambos existirem, atualiza os dois contextos
     if (token && userData) {
       setAuthenticated(true);
       try {
-        // Carrega os dados do usuário que estão em formato string JSON
         setUser(JSON.parse(userData));
       } catch (error) {
         console.error("Failed to parse user data from localStorage", error);
-        // Limpa em caso de dados corrompidos
         localStorage.removeItem("userData");
+        setUser(null as any);
+        setAuthenticated(false);
       }
+    } else {
+      setAuthenticated(false);
+      setUser(null as any);
     }
-  }, [setUser]); // setUser como dependência do useEffect
+  }, [setUser]);
 
   return (
     <AuthContext.Provider value={{ authenticated, setAuthenticated }}>

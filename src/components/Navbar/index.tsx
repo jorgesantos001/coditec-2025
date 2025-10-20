@@ -57,9 +57,6 @@ export const Navbar: React.FC<HeaderProps> = ({ page }) => {
                   <Link to="/campanhas/criar" className="nav-link">
                     <li>Criar</li>
                   </Link>
-                  <Link to="#" className="nav-link">
-                    <li>Painel</li>
-                  </Link>
                 </>
               </ul>
               <div className="row nav-profile" onClick={handleToggleMenu}>
