@@ -72,6 +72,13 @@ export const Login = () => {
             // Armazena o token e os dados do usuário
             localStorage.setItem("authToken", data.token);
             localStorage.setItem("userData", JSON.stringify(data.user));
+            localStorage.setItem("userId", data.user.id);
+            // Se for admin, salva adminId também
+            if (data.user.fg_admin === 1) {
+              localStorage.setItem("adminId", data.user.id);
+            } else {
+              localStorage.removeItem("adminId");
+            }
 
             setAuthenticated(true);
             setUser(data.user);

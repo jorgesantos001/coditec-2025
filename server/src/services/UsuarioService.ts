@@ -1,3 +1,4 @@
+
 import { PrismaClient } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import { CriarUsuarioDTO, LogarUsuarioDTO } from "../schemas/usuario.schema";
@@ -9,6 +10,13 @@ export default class UsuarioService {
 
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
+  }
+
+  public async buscarAdmins() {
+    const admins = await this.prisma.usuario.findMany({
+      where: { fg_admin: 1 },
+    });
+    return admins.map(({ cd_senha_usuario, ...admin }) => admin);
   }
 
   public async cadastrarUsuario(userInfos: CriarUsuarioDTO) {

@@ -54,12 +54,6 @@ export const criarUsuarioSchema = z.object({
             path: ["ch_cpf_usuario"],
             message: "O CPF é obrigatório para pessoa física.",
           });
-        } else if (!cpf.isValid(data.ch_cpf_usuario)) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ["ch_cpf_usuario"],
-            message: "CPF inválido.",
-          });
         }
 
         if (!data.dt_nascimento_usuario) {

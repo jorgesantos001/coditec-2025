@@ -1,9 +1,10 @@
 .perfil-grid {
   display: flex;
   gap: 32px;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   margin-bottom: 32px;
+  flex-wrap: wrap;
 }
 
 .perfil-foto {
@@ -52,7 +53,7 @@
 
 .perfil-container {
   max-width: 900px;
-  margin: 40px auto;
+  margin: 10rem auto 40px auto;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 16px rgba(0,0,0,0.08);
@@ -101,7 +102,7 @@
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #eee;
-  margin-bottom: 12px;
+  margin-bottom: 24px;
 }
 
 .perfil-form label {

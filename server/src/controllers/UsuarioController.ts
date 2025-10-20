@@ -1,5 +1,6 @@
-import { Request, Response } from "express";
-import UsuarioService from "../services/UsuarioService";
+
+  import { Request, Response } from "express";
+  import UsuarioService from "../services/UsuarioService";
 
 export default class UsuarioController {
   private usuarioService: UsuarioService;
@@ -10,6 +11,17 @@ export default class UsuarioController {
     this.login = this.login.bind(this);
     this.getUsers = this.getUsers.bind(this);
     this.getProfile = this.getProfile.bind(this);
+    this.getAdmins = this.getAdmins.bind(this);
+  }
+
+  public async getAdmins(req: Request, res: Response): Promise<Response> {
+    try {
+      const admins = await this.usuarioService.buscarAdmins();
+      return res.status(200).json(admins);
+    } catch (error: any) {
+      console.error("Erro ao buscar admins:", error);
+      return res.status(500).json({ message: "Erro ao buscar admins" });
+    }
   }
 
   public async create(req: Request, res: Response): Promise<Response> {

@@ -139,9 +139,9 @@ export const Descobrir = () => {
               onSubmit={handleBuscarCampanhas}
             >
               <h1 className="titulo white">Insira o estado e a cidade</h1>
-              <h2 className="sub titulo white">
+              <span className="sub titulo white" style={{display: 'block', marginTop: '0.5rem'}}>
                 Encontre campanhas de combate à fome perto de você
-              </h2>
+              </span>
               <div className="row">
                 <select
                   name="sg_estado_campanha"
@@ -225,14 +225,14 @@ export const Descobrir = () => {
                         <div className="titulo-wrapper row">
                           <h1 className="sub titulo row master">
                             Alimentos:
-                            <h2 className="sub titulo row titulo-link">
-                              {campanha.alimentos.map((alimento, index) => (
-                                <span key={index}>
-                                  {alimento.nm_alimento} -{" "}
-                                </span>
-                              ))}
-                            </h2>
                           </h1>
+                          <span className="sub titulo row titulo-link">
+                            {campanha.alimentos.map((alimento, index) => (
+                              <span key={index}>
+                                {alimento.nm_alimento} -{" "}
+                              </span>
+                            ))}
+                          </span>
                         </div>
                       </div>
 

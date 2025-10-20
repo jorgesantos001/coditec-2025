@@ -87,7 +87,7 @@ export const Navbar: React.FC<HeaderProps> = ({ page }) => {
                       </Link>
                     </li>
                     <li className="toggle-link">
-                      <Link to="#" className="sub titulo">
+                      <Link to="/chat" className="sub titulo">
                         Chat
                       </Link>
                     </li>

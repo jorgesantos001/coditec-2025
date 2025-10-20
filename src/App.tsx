@@ -11,6 +11,7 @@ import Perfil from "./pages/Perfil";
 import "./styles/main.scss";
 import { CriacaoCampanha } from "./pages/CadastroCampanha";
 import { Toaster } from "sonner";
+import ChatPage from "./pages/Chat";
 function App() {
   return (
     <UserProvider>
@@ -25,6 +26,7 @@ function App() {
             <Route path="/campanhas/:_id" element={<Campanha />} />
             <Route path="/campanhas/criar" element={<CriacaoCampanha />} />
             <Route path="/perfil" element={<Perfil />} />
+            <Route path="/chat" element={<ChatPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
