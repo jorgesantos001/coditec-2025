@@ -3,11 +3,14 @@ import { Link } from "react-router-dom";
 export const Footer = () => {
   return (
     <footer className="footer-bar">
-      <img
-        className="logo-footer"
-        src="/assets/img/logos/logo-nacao-nutrida-white.svg"
-        alt="Logo Nação Nutrida"
-      />
+      <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
+        <img
+          className="logo-footer"
+          src="/assets/img/logos/logo-nacao-nutrida-white.svg"
+          alt="Logo Nação Nutrida"
+        />
+        <span style={{color: '#fff', fontSize: '2rem', fontWeight: 700}}>Nação Nutrida</span>
+      </div>
       <ul className="menu-footer">
         <h2 className="sub titulo white">Ações sociais</h2>
         <Link to="/campanhas/criar">
@@ -22,7 +25,7 @@ export const Footer = () => {
       </ul>
       <ul className="menu-footer">
         <h2 className="sub titulo white">Ajuda</h2>
-        <Link to="#">
+        <Link to="/chat">
           <li className="list-item">Fale conosco</li>
         </Link>
         <Link to="#">

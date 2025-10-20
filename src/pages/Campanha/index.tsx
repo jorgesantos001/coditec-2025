@@ -4,8 +4,6 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { Footer } from "../../components/Footer";
 import { Navbar } from "../../components/Navbar";
 
-import axios from "axios";
-
 import { ICampanhaAlimento } from "../../types/ICampanha";
 import { UserContext } from "../../contexts/userContext";
 import api from "../../services/api";
@@ -34,7 +32,7 @@ export const Campanha = () => {
           console.log("Error: " + err);
         });
     }
-  }, [_id]);
+  }, [_id, url]);
 
   const [modalVisible, setModalVisible] = useState(false);
 

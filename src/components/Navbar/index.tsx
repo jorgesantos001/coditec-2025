@@ -10,6 +10,7 @@ interface HeaderProps {
 
 export const Navbar: React.FC<HeaderProps> = ({ page }) => {
   const [toggledMenu, setToggledMenu] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
 
   // 2. Destruture os valores e setters dos contextos para facilitar o uso
   const { user, setUser } = useContext(UserContext);
@@ -57,6 +58,60 @@ export const Navbar: React.FC<HeaderProps> = ({ page }) => {
                   <Link to="/campanhas/criar" className="nav-link">
                     <li>Criar</li>
                   </Link>
+                  <li className="nav-link" style={{cursor: 'pointer'}} onClick={() => setShowAbout(true)}>
+                    Sobre nós
+                  </li>
+      {showAbout && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            background: 'rgba(0,0,0,0.7)',
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }} onClick={() => setShowAbout(false)}>
+            <div style={{
+              background: '#fff',
+              borderRadius: 24,
+              padding: '4rem 3rem',
+              width: '90vw',
+              maxWidth: 900,
+              minHeight: '60vh',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
+              textAlign: 'center',
+              position: 'relative',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }} onClick={e => e.stopPropagation()}>
+              <h2 style={{fontSize: '3rem', color: '#1976d2', marginBottom: 24, fontWeight: 700}}>Sobre nós</h2>
+              <p style={{fontSize: '1.7rem', color: '#222', marginBottom: 32, lineHeight: 1.7, maxWidth: 700}}>
+                O projeto <strong>Nação Nutrida</strong> nasceu para conectar pessoas, ONGs e empresas em prol do combate à fome e à insegurança alimentar no Brasil. Nosso objetivo é facilitar doações, promover campanhas solidárias e criar uma rede de apoio que transforma vidas.<br /><br />
+                Aqui, você pode criar campanhas, doar alimentos, acompanhar o progresso das ações e conversar diretamente com quem está fazendo a diferença. Junte-se a nós e faça parte dessa corrente do bem!
+              </p>
+              <button style={{
+                background: '#1976d2',
+                color: '#fff',
+                border: 'none',
+                borderRadius: 10,
+                padding: '16px 48px',
+                fontSize: '1.5rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                marginTop: 12,
+                boxShadow: '0 4px 16px rgba(25, 118, 210, 0.10)',
+                letterSpacing: '0.5px',
+              }} onClick={() => setShowAbout(false)}>
+                Fechar
+              </button>
+            </div>
+          </div>
+      )}
                 </>
               </ul>
               <div className="row nav-profile" onClick={handleToggleMenu}>
