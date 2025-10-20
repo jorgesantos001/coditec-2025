@@ -1,6 +1,5 @@
-
-  import { Request, Response } from "express";
-  import UsuarioService from "../services/UsuarioService";
+import { Request, Response } from "express";
+import UsuarioService from "../services/UsuarioService";
 
 export default class UsuarioController {
   private usuarioService: UsuarioService;
@@ -12,6 +11,7 @@ export default class UsuarioController {
     this.getUsers = this.getUsers.bind(this);
     this.getProfile = this.getProfile.bind(this);
     this.getAdmins = this.getAdmins.bind(this);
+    this.getUserNameById = this.getUserNameById.bind(this);
   }
 
   public async getAdmins(req: Request, res: Response): Promise<Response> {
@@ -88,5 +88,21 @@ export default class UsuarioController {
     }
 
     return res.status(200).json(usuarioLogado);
+  }
+
+  public async getUserNameById(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params;
+    if (!id) return res.status(400).json({ error: "id obrigatório" });
+    if (!/^[a-fA-F0-9]{24}$/.test(id)) {
+      return res.status(400).json({ error: "id inválido" });
+    }
+
+    try {
+      const usuario = await this.usuarioService.buscarNomeUsuarioPorId(id);
+      return res.status(200).json(usuario);
+    } catch (error: any) {
+      console.error("Erro ao buscar usuário por ID:", error);
+      return res.status(500).json({ message: "Erro ao buscar usuário por ID" });
+    }
   }
 }

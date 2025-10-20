@@ -1,4 +1,3 @@
-
 import { PrismaClient } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import { CriarUsuarioDTO, LogarUsuarioDTO } from "../schemas/usuario.schema";
@@ -110,5 +109,14 @@ export default class UsuarioService {
     });
 
     return usuariosSemSenha;
+  }
+
+  public async buscarNomeUsuarioPorId(id: string) {
+    const usuario = await this.prisma.usuario.findUnique({ where: { id } });
+    if (!usuario) {
+      throw new Error("Usuário nao encontrado");
+    }
+    const { cd_senha_usuario, ...usuarioSemSenha } = usuario;
+    return usuarioSemSenha;
   }
 }
