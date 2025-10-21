@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import UsuarioService from "../services/UsuarioService";
+import { AtualizarUsuarioDTO } from "../schemas/usuario.schema";
 
 export default class UsuarioController {
   private usuarioService: UsuarioService;
@@ -12,6 +13,7 @@ export default class UsuarioController {
     this.getProfile = this.getProfile.bind(this);
     this.getAdmins = this.getAdmins.bind(this);
     this.getUserNameById = this.getUserNameById.bind(this);
+    this.updateUser = this.updateUser.bind(this);
   }
 
   public async getAdmins(req: Request, res: Response): Promise<Response> {
@@ -103,6 +105,33 @@ export default class UsuarioController {
     } catch (error: any) {
       console.error("Erro ao buscar usuário por ID:", error);
       return res.status(500).json({ message: "Erro ao buscar usuário por ID" });
+    }
+  }
+
+  public async updateUser(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params;
+    const userUpdatedInfos: AtualizarUsuarioDTO = req.body;
+    if (!id) return res.status(400).json({ error: "id obrigatório" });
+    if (!/^[a-fA-F0-9]{24}$/.test(id)) {
+      return res.status(400).json({ error: "id inválido" });
+    }
+
+    try {
+      const usuario = await this.usuarioService.atualizarUsuario(
+        id,
+        userUpdatedInfos
+      );
+      return res.status(200).json(usuario);
+    } catch (error: any) {
+      console.error("Erro ao atualizar usuário:", error);
+
+      if (error.message === "Usuário não encontrado") {
+        return res.status(404).json({ message: error.message });
+      }
+
+      return res
+        .status(500)
+        .json({ message: "Erro interno ao atualizar usuário" });
     }
   }
 }

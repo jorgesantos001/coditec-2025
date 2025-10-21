@@ -1,6 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import * as bcrypt from "bcrypt";
-import { CriarUsuarioDTO, LogarUsuarioDTO } from "../schemas/usuario.schema";
+import {
+  AtualizarUsuarioDTO,
+  CriarUsuarioDTO,
+  LogarUsuarioDTO,
+} from "../schemas/usuario.schema";
 import * as jwt from "jsonwebtoken";
 
 export default class UsuarioService {
@@ -117,6 +121,28 @@ export default class UsuarioService {
       throw new Error("Usuário nao encontrado");
     }
     const { cd_senha_usuario, ...usuarioSemSenha } = usuario;
+    return usuarioSemSenha;
+  }
+
+  public async atualizarUsuario(
+    id: string,
+    userUpdatedInfos: AtualizarUsuarioDTO
+  ) {
+    const usuarioExistente = await this.prisma.usuario.findUnique({
+      where: { id },
+    });
+
+    if (!usuarioExistente) {
+      throw new Error("Usuário não encontrado");
+    }
+
+    const usuarioAtualizado = await this.prisma.usuario.update({
+      where: { id: id },
+      data: userUpdatedInfos,
+    });
+
+    const { cd_senha_usuario, ...usuarioSemSenha } = usuarioAtualizado;
+
     return usuarioSemSenha;
   }
 }
