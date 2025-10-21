@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import formatDate from "../../utils/format-date";
 import { IEstadoCidades } from "../../types/IEstadoCidade";
+import { formatarCelular } from "../../utils/format-celular";
 
 interface PerfilData {
   nm_usuario: string;
@@ -56,6 +57,11 @@ const Perfil: React.FC = () => {
     async function fetchPerfil() {
       try {
         const res = await api.get(`/api/perfil`);
+        if (res.data.nr_celular_usuario) {
+          res.data.nr_celular_usuario = formatarCelular(
+            res.data.nr_celular_usuario
+          );
+        }
         setPerfil(res.data);
         setForm(res.data);
         setFotoPreview(res.data.cd_foto_usuario || "");
@@ -105,6 +111,12 @@ const Perfil: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
+    if (name === "nr_celular_usuario") {
+      const valorFormatado = formatarCelular(value);
+      setForm((prevForm) => ({ ...prevForm, [name]: valorFormatado }));
+      return;
+    }
+
     setForm((prevForm) => ({ ...prevForm, [name]: value }));
 
     // Se o usuário mudou o estado...
@@ -134,8 +146,53 @@ const Perfil: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await api.put(`/usuario/${user.id}`, form);
-    setEditando(false);
+
+    if (form.nm_usuario.trim() === "") {
+      toast.error("O campo 'Nome' não pode ficar vazio.");
+      return; // Para a execução
+    }
+
+    // Limpa a máscara do celular para enviar só os dígitos
+    const digitosCelular = form.nr_celular_usuario
+      ? form.nr_celular_usuario.replace(/\D/g, "")
+      : "";
+
+    // Validação de celular (10 = fixo, 11 = celular)
+    if (
+      digitosCelular &&
+      (digitosCelular.length < 10 || digitosCelular.length > 11)
+    ) {
+      toast.error("Por favor, preencha um número de celular válido com DDD.");
+      return;
+    }
+
+    const userUpdatedInfos = {
+      nm_usuario: form.nm_usuario.trim(),
+      nr_celular_usuario: digitosCelular,
+      sg_estado_usuario: form.sg_estado_usuario,
+      nm_cidade_usuario: form.nm_cidade_usuario,
+      cd_foto_usuario: form.cd_foto_usuario,
+    };
+
+    try {
+      const res = await api.patch(`/api/usuario/${user!.id}`, userUpdatedInfos);
+
+      const perfilAtualizado = {
+        ...res.data,
+        nr_celular_usuario: formatarCelular(res.data.nr_celular_usuario || ""),
+      };
+
+      setPerfil(perfilAtualizado);
+      setForm(perfilAtualizado);
+      setFotoPreview(perfilAtualizado.cd_foto_usuario || "");
+
+      setEditando(false);
+
+      toast.success("Perfil atualizado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao atualizar o perfil:", error);
+      toast.error("Não foi possível atualizar seus dados.");
+    }
   };
 
   if (!perfil) return <div>Carregando...</div>;
@@ -217,6 +274,8 @@ const Perfil: React.FC = () => {
                 name="nr_celular_usuario"
                 value={form.nr_celular_usuario || ""}
                 onChange={handleChange}
+                maxLength={15}
+                placeholder="(XX) XXXXX-XXXX"
                 disabled={!editando}
               />
             </label>
@@ -272,7 +331,7 @@ const Perfil: React.FC = () => {
         </div>
         <div className="perfil-botao">
           {editando ? (
-            <button type="submit" form="perfil-form">
+            <button type="submit" form="perfil-form" onClick={handleSubmit}>
               Salvar
             </button>
           ) : (
