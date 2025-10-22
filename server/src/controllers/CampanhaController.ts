@@ -10,6 +10,7 @@ export default class CampanhaController {
     this.getAll = this.getAll.bind(this);
     this.getById = this.getById.bind(this);
     this.findByLocation = this.findByLocation.bind(this);
+    this.findByUserId = this.findByUserId.bind(this);
   }
 
   public async create(req: Request, res: Response): Promise<Response> {
@@ -72,6 +73,26 @@ export default class CampanhaController {
         return res.status(404).json({ message: error.message });
       }
       console.error("Erro ao buscar campanha por local:", error);
+      return res
+        .status(500)
+        .json({ message: "Erro interno ao buscar campanha." });
+    }
+  }
+
+  public async findByUserId(req: Request, res: Response): Promise<Response> {
+    const usuarioLogado = req.user;
+
+    if (!usuarioLogado) {
+      return res.status(401).json({ message: "Usuário não autenticado" });
+    }
+
+    try {
+      const campanhas = await this.campanhaService.buscarPorUserId(
+        usuarioLogado.id
+      );
+      return res.status(200).json(campanhas);
+    } catch (error: any) {
+      console.error("Erro ao buscar campanha por usuario:", error);
       return res
         .status(500)
         .json({ message: "Erro interno ao buscar campanha." });

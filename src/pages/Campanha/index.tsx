@@ -14,6 +14,8 @@ export const Campanha = () => {
   const [campanha, setCampanha] = useState<ICampanhaAlimento | null>(null);
   const user = useContext(UserContext);
 
+  const [refreshData, setRefreshData] = useState(false);
+
   const { _id } = useParams();
   const url = `/api/campanhas/${_id}`;
 
@@ -32,13 +34,13 @@ export const Campanha = () => {
           console.log("Error: " + err);
         });
     }
-  }, [_id, url]);
+  }, [_id, url, refreshData]);
 
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleCloseModal = () => {
     if (!user.user || !user.user.id || user.user.id === "") {
-      toast.error("Por favor, efetue o login para doar.");
+      toast.error("Por favor, efetue o login na sua conta para doar.");
       navigate("/login");
       return;
     }
@@ -123,8 +125,6 @@ export const Campanha = () => {
       return;
     }
 
-    console.log(infos_doacao, alimentos_doacao);
-
     const dbInsert = async () => {
       try {
         const response = await api.post("/api/doacoes", {
@@ -132,20 +132,32 @@ export const Campanha = () => {
           alimentos_doacao: alimentos_doacao,
         });
         return [response.status, response.data];
-      } catch (error) {
-        console.error("Erro:", error);
-        throw error;
+      } catch (error: any) {
+        console.error("Erro na requisição:", error);
+
+        if (error.response) {
+          return [error.response.status, error.response.data];
+        }
+
+        // Se não for um erro de resposta (ex: rede), retorna um status genérico
+        return [500, "Erro interno do cliente"];
       }
     };
 
     const handleDBInsert = async () => {
       try {
         const [responseStatus, responseData] = await dbInsert();
-        if (responseStatus !== 201) {
-          console.log("Erro ao salvar dados no banco");
+        if (responseStatus === 401) {
+          toast.error("Você precisa estar logado para fazer uma doação.");
+          navigate("/login");
+        } else if (responseStatus !== 201) {
+          toast.error("Erro ao fazer doação, tente novamente mais tarde");
         } else {
           console.log("Sucesso ao salvar dados no banco ", responseData);
-          window.location.reload();
+          setModalVisible(false);
+          toast.success("Doação realizada com sucesso!");
+          setRefreshData((prev) => !prev);
+          event.target.reset();
         }
       } catch (error) {
         console.error("Erro ao inserir dados:", error);

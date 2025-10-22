@@ -10,8 +10,12 @@ const doacaoController = new DoacaoController(doacaoService);
 
 const doacaoRouter = Router();
 
-
 doacaoRouter.post("/doacoes", authMiddleware, doacaoController.create);
-doacaoRouter.get("/doacoes/usuario/:id", authMiddleware, doacaoController.getByUsuario);
+
+doacaoRouter.get(
+  "/doacoes/minhas",
+  authMiddleware,
+  doacaoController.findByUserId
+);
 
 export default doacaoRouter;
