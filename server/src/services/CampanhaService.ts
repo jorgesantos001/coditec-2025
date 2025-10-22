@@ -71,6 +71,31 @@ export default class CampanhaService {
     return this.agregarDados(campanha);
   }
 
+  /**
+   * Busca todas as campanhas ativas do usuário logado e agrega dados relacionados.
+   */
+  public async buscarPorUserId(userId: string) {
+    const campanhas = await this.prisma.campanha.findMany({
+      where: {
+        usuario_id: userId,
+        dt_encerramento_campanha: { gt: new Date() },
+        fg_campanha_ativa: true,
+      },
+      orderBy: {
+        dt_encerramento_campanha: "desc",
+      },
+    });
+
+    if (campanhas.length === 0) return [];
+
+    return Promise.all(
+      campanhas.map((campanha) => this.agregarDados(campanha))
+    );
+  }
+
+  /**
+   * Busca todas as campanhas ativas de um local (estado e cidade) e agrega dados relacionados.
+   */
   public async buscarPorLocal(
     sg_estado_campanha: string,
     nm_cidade_campanha: string

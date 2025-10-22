@@ -19,6 +19,12 @@ campanhaRouter.post(
   campanhaController.create
 );
 
+campanhaRouter.get(
+  "/campanhas/minhas",
+  authMiddleware,
+  campanhaController.findByUserId
+);
+
 campanhaRouter.get("/campanhas", campanhaController.getAll);
 
 campanhaRouter.get("/campanhas/buscar", campanhaController.findByLocation);
