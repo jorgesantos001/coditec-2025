@@ -25,6 +25,18 @@ campanhaRouter.get(
   campanhaController.findByUserId
 );
 
+campanhaRouter.get(
+  "/campanhas/:id/doacoes",
+  authMiddleware,
+  campanhaController.findDoacoesByCampanhaId
+);
+
+campanhaRouter.patch(
+  "/campanhas/desativar/:id",
+  authMiddleware,
+  campanhaController.deactivate
+);
+
 campanhaRouter.get("/campanhas", campanhaController.getAll);
 
 campanhaRouter.get("/campanhas/buscar", campanhaController.findByLocation);
