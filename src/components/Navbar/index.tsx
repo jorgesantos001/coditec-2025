@@ -134,8 +134,8 @@ export const Navbar: React.FC<HeaderProps> = ({ page }) => {
                 <ul>
                   <>
                     <li className="toggle-link">
-                      <Link to="#" className="sub titulo">
-                        Notificações
+                      <Link to="/painel" className="sub titulo">
+                        Painel
                       </Link>
                     </li>
                     <li className="toggle-link">

@@ -7,6 +7,17 @@ export default class DoacaoController {
   constructor(doacaoService: DoacaoService) {
     this.doacaoService = doacaoService;
     this.create = this.create.bind(this);
+    this.getByUsuario = this.getByUsuario.bind(this);
+  }
+  public async getByUsuario(req: Request, res: Response): Promise<Response> {
+    try {
+      const { id } = req.params;
+      const doacoes = await this.doacaoService.buscarDoacoesPorUsuario(id);
+      return res.status(200).json(doacoes);
+    } catch (error: any) {
+      console.error("Erro ao buscar doações do usuário:", error);
+      return res.status(500).json({ message: "Erro interno ao buscar doações do usuário." });
+    }
   }
 
   public async create(req: Request, res: Response): Promise<Response> {

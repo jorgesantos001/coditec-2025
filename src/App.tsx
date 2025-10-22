@@ -8,6 +8,7 @@ import { Campanha } from "./pages/Campanha";
 import { Login } from "./pages/Login";
 import { Cadastro } from "./pages/Cadastro";
 import Perfil from "./pages/Perfil";
+import Painel from "./pages/Painel";
 import "./styles/main.scss";
 import { CriacaoCampanha } from "./pages/CadastroCampanha";
 import { Toaster } from "sonner";
@@ -26,6 +27,7 @@ function App() {
             <Route path="/campanhas/:_id" element={<Campanha />} />
             <Route path="/campanhas/criar" element={<CriacaoCampanha />} />
             <Route path="/perfil" element={<Perfil />} />
+            <Route path="/painel" element={<Painel />} />
             <Route path="/chat" element={<ChatPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
