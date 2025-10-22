@@ -60,7 +60,7 @@ npm run start
 ```
 
 Back-End: 
-1. Na pasta server, execute:
+2. Na pasta server, execute:
 ```
 npm run dev
 ```
