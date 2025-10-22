@@ -21,8 +21,13 @@ prisma >= a versão 5.20.0
 npm install
 ```
 
-2. Conecte-se ao banco de dados:
-  * Faça uma cópia do arquivo .env.example
+2. Na pasta server, instale as dependências:
+```
+npm install
+```
+
+3. Conecte-se ao banco de dados:
+  * Faça uma cópia do arquivo .env.example na pasta server
   * Renomeie a cópia para .env
   * Insira a sua string de conexão do mongodb em 'DATABASE_URL' e coloque /nacao-nutrida no final
 
@@ -31,14 +36,19 @@ Exemplo:
 DATABASE_URL="mongodb+srv://<Seu_Usuario>:<Sua_Senha>@cluster0.nql6p.mongodb.net/nacao-nutrida"
 ```
 
-3. Na pasta raiz, gere o cliente prisma:
+4. Na pasta server, sincronize seu schema Prisma com o banco de dados:
 ```
-npx prisma generate
+npx prisma db push --schema .\prisma\schema.prisma
 ```
 
-4. Na pasta database, execute o script para configurar o banco de dados:
+4. Na pasta server, gere o cliente prisma:
 ```
-node popularBanco.js
+npx prisma generate .\prisma\schema.prisma
+```
+
+5. Na pasta server, execute o script para popular o banco de dados:
+```
+npm run seed
 ```
 
 ## Executando o projeto
@@ -56,7 +66,6 @@ npm run dev
 ```
 
 ## 🛠️ Tecnologias Utilizadas
-
 * [Typescript](https://www.typescriptlang.org/)
 * [React](https://react.dev/)
 * [MongoDB](https://www.mongodb.com/pt-br)
