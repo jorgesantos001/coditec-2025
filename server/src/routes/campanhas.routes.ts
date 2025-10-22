@@ -25,4 +25,19 @@ campanhaRouter.get("/campanhas/buscar", campanhaController.findByLocation);
 
 campanhaRouter.get("/campanhas/:id", campanhaController.getById);
 
+// Retorna campanhas de um usuário específico
+campanhaRouter.get("/campanhas/usuario/:id", authMiddleware, async (req, res) => {
+  const { id } = req.params;
+  if (!id) return res.status(400).json({ error: "id obrigatório" });
+  if (!/^[a-fA-F0-9]{24}$/.test(id)) {
+    return res.status(400).json({ error: "id inválido" });
+  }
+  try {
+    const campanhas = await prisma.campanha.findMany({ where: { usuario_id: id } });
+    return res.status(200).json(campanhas);
+  } catch (error) {
+    return res.status(500).json({ error: "Erro ao buscar campanhas do usuário" });
+  }
+});
+
 export default campanhaRouter;
