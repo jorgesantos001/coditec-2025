@@ -41,12 +41,12 @@ DATABASE_URL="mongodb+srv://<Seu_Usuario>:<Sua_Senha>@cluster0.nql6p.mongodb.net
 npx prisma db push --schema .\prisma\schema.prisma
 ```
 
-4. Na pasta server, gere o cliente prisma:
+5. Na pasta server, gere o cliente prisma:
 ```
 npx prisma generate .\prisma\schema.prisma
 ```
 
-5. Na pasta server, execute o script para popular o banco de dados:
+6. Na pasta server, execute o script para popular o banco de dados:
 ```
 npm run seed
 ```
@@ -60,7 +60,7 @@ npm run start
 ```
 
 Back-End: 
-1. Na pasta server, execute:
+2. Na pasta server, execute:
 ```
 npm run dev
 ```
