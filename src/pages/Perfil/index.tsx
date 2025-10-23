@@ -230,12 +230,22 @@ const Perfil: React.FC = () => {
               </div>
             )}
             {editando && (
-              <input
-                type="file"
-                name="cd_foto_usuario"
-                accept="image/*"
-                onChange={handleFotoChange}
-              />
+              <>
+                <input
+                  type="file"
+                  name="cd_foto_usuario"
+                  accept="image/*"
+                  onChange={handleFotoChange}
+                />
+                <button
+                  type="button"
+                  style={{marginTop:8, background:'#e53935', color:'#fff', border:'none', borderRadius:8, padding:'6px 16px', fontWeight:600, cursor:'pointer'}}
+                  onClick={() => {
+                    setFotoPreview("");
+                    setForm((prev) => ({ ...prev, cd_foto_usuario: "" }));
+                  }}
+                >Remover imagem</button>
+              </>
             )}
           </div>
           <form onSubmit={handleSubmit} className="perfil-form">

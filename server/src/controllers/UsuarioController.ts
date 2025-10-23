@@ -101,7 +101,7 @@ export default class UsuarioController {
 
     try {
       const usuario = await this.usuarioService.buscarNomeUsuarioPorId(id);
-      return res.status(200).json(usuario);
+      return res.status(200).json({ nome: usuario.nm_usuario });
     } catch (error: any) {
       console.error("Erro ao buscar usuário por ID:", error);
       return res.status(500).json({ message: "Erro ao buscar usuário por ID" });

@@ -57,7 +57,14 @@ const ChatSidebar = ({ conversations, selected, onSelect }: any) => {
             // Se não encontrar, mostra vazio
             if (!otherUserId) otherUserId = "";
           }
-          const displayName = userNames[otherUserId] || (otherUserId && otherUserId !== adminId ? otherUserId : "Usuário");
+          let displayName = userNames[otherUserId] || (otherUserId && otherUserId !== adminId ? otherUserId : "Usuário");
+          // Se o nome do admin aparecer, substitui por 'Nação Nutrida'
+          if (
+            (userNames[otherUserId] && userNames[otherUserId].toLowerCase() === 'admin') ||
+            (otherUserId === adminId && (!userNames[otherUserId] || userNames[otherUserId].toLowerCase() === 'admin'))
+          ) {
+            displayName = 'Nação Nutrida';
+          }
           return (
             <li
               key={conv.id}
