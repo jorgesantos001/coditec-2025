@@ -97,7 +97,7 @@ export default class UsuarioService {
     const jwtSecret = process.env.JWT_SECRET! as string;
 
     const token = jwt.sign(jwtPayload, jwtSecret, {
-      expiresIn: "2h",
+      expiresIn: "12h",
     });
 
     const { cd_senha_usuario, ...usuarioSemSenha } = usuario;

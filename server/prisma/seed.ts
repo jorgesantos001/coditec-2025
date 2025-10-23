@@ -18,77 +18,193 @@ async function main() {
 
   // --- 1. Inserir Alimentos ---
   const alimentosData = [
+    // Categoria 1: Grãos e Cereais
     {
-      nm_alimento: "Arroz",
+      nm_alimento: "Arroz (Tipo 1)",
       sg_medida_alimento: "kg",
-      nm_tipo_alimento: "Grão",
+      nm_tipo_alimento: "Grãos e Cereais",
       cd_tipo_alimento: 1,
     },
     {
-      nm_alimento: "Feijão",
+      nm_alimento: "Feijão (Carioca)",
       sg_medida_alimento: "kg",
-      nm_tipo_alimento: "Grão",
+      nm_tipo_alimento: "Grãos e Cereais",
       cd_tipo_alimento: 1,
     },
     {
-      nm_alimento: "Macarrão",
+      nm_alimento: "Feijão (Preto)",
       sg_medida_alimento: "kg",
-      nm_tipo_alimento: "Massa",
+      nm_tipo_alimento: "Grãos e Cereais",
       cd_tipo_alimento: 1,
     },
     {
-      nm_alimento: "Café",
-      sg_medida_alimento: "kg",
-      nm_tipo_alimento: "Mais doados",
+      nm_alimento: "Lentilha",
+      sg_medida_alimento: "g", // Pacotes de 500g
+      nm_tipo_alimento: "Grãos e Cereais",
       cd_tipo_alimento: 1,
     },
     {
-      nm_alimento: "Açúcar",
-      sg_medida_alimento: "kg",
-      nm_tipo_alimento: "Mais doados",
+      nm_alimento: "Grão-de-bico",
+      sg_medida_alimento: "g", // Pacotes de 500g
+      nm_tipo_alimento: "Grãos e Cereais",
       cd_tipo_alimento: 1,
     },
+
+    // Categoria 2: Massas e Farináceos
     {
-      nm_alimento: "Óleo",
+      nm_alimento: "Macarrão (Espaguete)",
+      sg_medida_alimento: "g", // Pacotes de 500g
+      nm_tipo_alimento: "Massas e Farináceos",
+      cd_tipo_alimento: 2,
+    },
+    {
+      nm_alimento: "Macarrão (Pena/Parafuso)",
+      sg_medida_alimento: "g", // Pacotes de 500g
+      nm_tipo_alimento: "Massas e Farináceos",
+      cd_tipo_alimento: 2,
+    },
+    {
+      nm_alimento: "Farinha de Trigo",
+      sg_medida_alimento: "kg",
+      nm_tipo_alimento: "Massas e Farináceos",
+      cd_tipo_alimento: 2,
+    },
+    {
+      nm_alimento: "Fubá (Mimoso)",
+      sg_medida_alimento: "kg",
+      nm_tipo_alimento: "Massas e Farináceos",
+      cd_tipo_alimento: 2,
+    },
+    {
+      nm_alimento: "Farinha de Mandioca",
+      sg_medida_alimento: "kg",
+      nm_tipo_alimento: "Massas e Farináceos",
+      cd_tipo_alimento: 2,
+    },
+    {
+      nm_alimento: "Cuscuz / Flocão de Milho",
+      sg_medida_alimento: "g", // Pacotes de 500g
+      nm_tipo_alimento: "Massas e Farináceos",
+      cd_tipo_alimento: 2,
+    },
+
+    // Categoria 3: Proteínas (Conservas)
+    // Removi "Carne Bovina" e "Ovos" por serem perecíveis
+    {
+      nm_alimento: "Carne Seca (Charque)",
+      sg_medida_alimento: "g", // Pacotes de 500g
+      nm_tipo_alimento: "Proteínas (Conservas)",
+      cd_tipo_alimento: 3,
+    },
+    {
+      nm_alimento: "Sardinha (Lata)",
+      sg_medida_alimento: "un",
+      nm_tipo_alimento: "Proteínas (Conservas)",
+      cd_tipo_alimento: 3,
+    },
+    {
+      nm_alimento: "Atum (Lata)",
+      sg_medida_alimento: "un",
+      nm_tipo_alimento: "Proteínas (Conservas)",
+      cd_tipo_alimento: 3,
+    },
+
+    // Categoria 4: Óleos e Temperos
+    {
+      nm_alimento: "Óleo de Soja",
       sg_medida_alimento: "l",
-      nm_tipo_alimento: "Mais doados",
-      cd_tipo_alimento: 1,
-    },
-    {
-      nm_alimento: "Ovos",
-      sg_medida_alimento: "dz",
-      nm_tipo_alimento: "Mais doados",
-      cd_tipo_alimento: 1,
+      nm_tipo_alimento: "Óleos e Temperos",
+      cd_tipo_alimento: 4,
     },
     {
       nm_alimento: "Azeite",
+      sg_medida_alimento: "l", // Garrafas de 500ml (0.5l) ou 1l
+      nm_tipo_alimento: "Óleos e Temperos",
+      cd_tipo_alimento: 4,
+    },
+    {
+      nm_alimento: "Sal Refinado",
+      sg_medida_alimento: "kg",
+      nm_tipo_alimento: "Óleos e Temperos",
+      cd_tipo_alimento: 4,
+    },
+    {
+      nm_alimento: "Vinagre",
       sg_medida_alimento: "l",
-      nm_tipo_alimento: "Mais doados",
-      cd_tipo_alimento: 1,
+      nm_tipo_alimento: "Óleos e Temperos",
+      cd_tipo_alimento: 4,
+    },
+
+    // Categoria 5: Mercearia / Matinais
+    {
+      nm_alimento: "Café (Pó)",
+      sg_medida_alimento: "g", // Pacotes de 500g
+      nm_tipo_alimento: "Mercearia / Matinais",
+      cd_tipo_alimento: 5,
     },
     {
-      nm_alimento: "Sal",
+      nm_alimento: "Açúcar (Refinado)",
       sg_medida_alimento: "kg",
-      nm_tipo_alimento: "Mais doados",
-      cd_tipo_alimento: 1,
+      nm_tipo_alimento: "Mercearia / Matinais",
+      cd_tipo_alimento: 5,
     },
     {
-      nm_alimento: "Farinha de trigo",
-      sg_medida_alimento: "kg",
-      nm_tipo_alimento: "Mais doados",
-      cd_tipo_alimento: 1,
+      nm_alimento: "Leite em Pó",
+      sg_medida_alimento: "g", // Latas de 400g
+      nm_tipo_alimento: "Mercearia / Matinais",
+      cd_tipo_alimento: 5,
     },
     {
-      nm_alimento: "Fubá",
-      sg_medida_alimento: "kg",
-      nm_tipo_alimento: "Mais doados",
-      cd_tipo_alimento: 1,
+      nm_alimento: "Achocolatado em Pó",
+      sg_medida_alimento: "g", // Latas de 400g
+      nm_tipo_alimento: "Mercearia / Matinais",
+      cd_tipo_alimento: 5,
+    },
+
+    // Categoria 6: Enlatados e Conservas
+    {
+      nm_alimento: "Molho de Tomate (Sachê/Lata)",
+      sg_medida_alimento: "un",
+      nm_tipo_alimento: "Enlatados e Conservas",
+      cd_tipo_alimento: 6,
     },
     {
-      nm_alimento: "Carne Bovina",
-      sg_medida_alimento: "kg",
-      nm_tipo_alimento: "Carnes",
-      cd_tipo_alimento: 2,
+      nm_alimento: "Milho (Lata)",
+      sg_medida_alimento: "un",
+      nm_tipo_alimento: "Enlatados e Conservas",
+      cd_tipo_alimento: 6,
+    },
+    {
+      nm_alimento: "Ervilha (Lata)",
+      sg_medida_alimento: "un",
+      nm_tipo_alimento: "Enlatados e Conservas",
+      cd_tipo_alimento: 6,
+    },
+    {
+      nm_alimento: "Seleta de Legumes (Lata)",
+      sg_medida_alimento: "un",
+      nm_tipo_alimento: "Enlatados e Conservas",
+      cd_tipo_alimento: 6,
+    },
+
+    // Categoria 7: Biscoitos e Doces
+    {
+      nm_alimento: "Biscoito (Água e Sal)",
+      sg_medida_alimento: "pct",
+      nm_tipo_alimento: "Biscoitos e Doces",
+      cd_tipo_alimento: 7,
+    },
+    {
+      nm_alimento: "Biscoito (Maisena)",
+      sg_medida_alimento: "pct",
+      nm_tipo_alimento: "Biscoitos e Doces",
+      cd_tipo_alimento: 7,
+    },
+    {
+      nm_alimento: "Goiabada",
+      sg_medida_alimento: "g", // Embalagens de 300g ou 500g
+      nm_tipo_alimento: "Biscoitos e Doces",
+      cd_tipo_alimento: 7,
     },
   ];
   await prisma.alimento.createMany({ data: alimentosData });

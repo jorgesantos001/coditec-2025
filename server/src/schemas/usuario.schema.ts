@@ -1,6 +1,6 @@
 // Em src/schemas/usuario.schema.ts
 import { z } from "zod/v3";
-import { cpf, cnpj } from "cpf-cnpj-validator";
+import { cpf } from "cpf-cnpj-validator";
 
 export const criarUsuarioSchema = z.object({
   // O corpo da requisição deve tem a chave 'user_infos'
@@ -65,21 +65,21 @@ export const criarUsuarioSchema = z.object({
         }
       }
 
-      if (data.tipo_usuario === "pj") {
-        if (!data.ch_cnpj_usuario) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ["ch_cnpj_usuario"],
-            message: "O CNPJ é obrigatório para pessoa jurídica.",
-          });
-        } else if (!cnpj.isValid(data.ch_cnpj_usuario)) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ["ch_cnpj_usuario"],
-            message: "CNPJ inválido.",
-          });
-        }
-      }
+      // if (data.tipo_usuario === "pj") {
+      //   if (!data.ch_cnpj_usuario) {
+      //     ctx.addIssue({
+      //       code: z.ZodIssueCode.custom,
+      //       path: ["ch_cnpj_usuario"],
+      //       message: "O CNPJ é obrigatório para pessoa jurídica.",
+      //     });
+      //   } else if (!cnpj.isValid(data.ch_cnpj_usuario)) {
+      //     ctx.addIssue({
+      //       code: z.ZodIssueCode.custom,
+      //       path: ["ch_cnpj_usuario"],
+      //       message: "CNPJ inválido.",
+      //     });
+      //   }
+      // }
     }),
 });
 export type CriarUsuarioDTO = z.infer<typeof criarUsuarioSchema>["user_infos"];
