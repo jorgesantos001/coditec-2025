@@ -5,6 +5,29 @@ import axios from "axios";
 import { IEstadoCidades } from "../../types/IEstadoCidade";
 import api from "../../services/api";
 import { toast } from "sonner";
+import { formatarCelular } from "../../utils/format-celular";
+
+const formatCPF = (value: string) => {
+  if (!value) return "";
+  value = value.replace(/\D/g, "");
+  value = value.replace(/(\d{3})(\d)/, "$1.$2");
+  value = value.replace(/(\d{3})(\d)/, "$1.$2");
+  value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+  return value.slice(0, 14); // Limita o tamanho
+};
+
+/**
+ * Formata um valor de string para um formato de CNPJ XX.XXX.XXX/XXXX-XX.
+ */
+const formatCNPJ = (value: string) => {
+  if (!value) return "";
+  value = value.replace(/\D/g, "");
+  value = value.replace(/^(\d{2})(\d)/, "$1.$2");
+  value = value.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
+  value = value.replace(/\.(\d{3})(\d)/, ".$1/$2");
+  value = value.replace(/(\d{4})(\d)/, "$1-$2");
+  return value.slice(0, 18); // Limita o tamanho
+};
 
 export const Cadastro = () => {
   const [tipo_usuario, setTipoUsuario] = useState<string>("pf");
@@ -25,6 +48,9 @@ export const Cadastro = () => {
   >([]);
   const [listaCidades, setListaCidades] = useState<string[]>([]);
   const [cidadeSelecionada, setCidadeSelecionada] = useState<string>("");
+
+  const [documentoMascarado, setDocumentoMascarado] = useState<string>("");
+  const [celularMascarado, setCelularMascarado] = useState<string>("");
 
   useEffect(() => {
     api
@@ -54,6 +80,30 @@ export const Cadastro = () => {
     const selectCidade = event.target.value;
     setCidadeSelecionada(selectCidade);
     setNmCidadeUsuario(selectCidade);
+  };
+
+  const handleDocumentoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value.replace(/\D/g, "");
+    setChDocumentoUsuario(rawValue);
+
+    if (tipo_usuario === "pf") {
+      setDocumentoMascarado(formatCPF(rawValue));
+    } else {
+      setDocumentoMascarado(formatCNPJ(rawValue));
+    }
+  };
+
+  const handleCelularChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value.replace(/\D/g, "");
+    setNrCelularUsuario(rawValue);
+
+    setCelularMascarado(formatarCelular(rawValue));
+  };
+
+  const handleTipoUsuarioChange = (value: string) => {
+    setTipoUsuario(value);
+    setChDocumentoUsuario(""); // Limpa o valor real
+    setDocumentoMascarado(""); // Limpa o valor visual
   };
 
   const validateForm = (event: any, tipo_usuario: string) => {
@@ -149,7 +199,6 @@ export const Cadastro = () => {
       };
     }
 
-    // NOVA LÓGICA COM TOAST
     const handleDBInsert = async () => {
       try {
         const response = await api.post("/api/usuarioCadastro", {
@@ -174,7 +223,6 @@ export const Cadastro = () => {
             );
           }
         } else {
-          // Erro genérico (ex: rede)
           toast.error("Erro de conexão. Tente novamente mais tarde.");
           console.error("Erro inesperado:", error);
         }
@@ -182,10 +230,6 @@ export const Cadastro = () => {
     };
 
     handleDBInsert();
-  };
-
-  const handleTipoUsuarioChange = (value: string) => {
-    setTipoUsuario(value);
   };
 
   return (
@@ -207,7 +251,7 @@ export const Cadastro = () => {
                   id="pf"
                   value="pf"
                   checked={tipo_usuario === "pf"}
-                  onChange={() => handleTipoUsuarioChange("pf")}
+                  onChange={() => handleTipoUsuarioChange("pf")} // ATUALIZADO
                 />
                 <label htmlFor="pf">Pessoa Física</label>
               </div>
@@ -218,7 +262,7 @@ export const Cadastro = () => {
                   id="pj"
                   value="pj"
                   checked={tipo_usuario === "pj"}
-                  onChange={() => handleTipoUsuarioChange("pj")}
+                  onChange={() => handleTipoUsuarioChange("pj")} // ATUALIZADO
                 />
                 <label htmlFor="pj">Pessoa Jurídica</label>
               </div>
@@ -239,10 +283,11 @@ export const Cadastro = () => {
             </label>
             <input
               className="input-form"
-              type="text"
+              type="text" // Manter como 'text' para máscaras
               name="ch_documento_usuario"
-              value={ch_documento_usuario}
-              onChange={(e) => setChDocumentoUsuario(e.target.value)}
+              value={documentoMascarado} // ATUALIZADO: usa estado visual
+              onChange={handleDocumentoChange} // ATUALIZADO: usa novo handler
+              maxLength={tipo_usuario === "pf" ? 14 : 18} // Limita o input
             />
 
             <label htmlFor="">Email</label>
@@ -258,10 +303,11 @@ export const Cadastro = () => {
             <label htmlFor="">Celular</label>
             <input
               className="input-form"
-              type="tel"
+              type="tel" // 'tel' é bom para semântica em mobile
               name="nr_celular_usuario"
-              value={nr_celular_usuario}
-              onChange={(e) => setNrCelularUsuario(e.target.value)}
+              value={celularMascarado} // ATUALIZADO: usa estado visual
+              onChange={handleCelularChange} // ATUALIZADO: usa novo handler
+              maxLength={15} // (XX) XXXXX-XXXX
             />
 
             {tipo_usuario === "pf" && (
