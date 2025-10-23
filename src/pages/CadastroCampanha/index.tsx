@@ -1,15 +1,7 @@
-import React, {
-  useState,
-  useEffect,
-  FormEvent,
-  useRef,
-  useContext,
-} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navbar } from "../../components/Navbar";
-import { fetchEstadosCidades, campanhasIbgeApi } from "../../data/IbgeApi";
 
-import axios from "axios";
 import {} from "../../";
 import { IAlimento, IAlimentoLista } from "../../types/IAlimento";
 import { IEstadoCidades } from "../../types/IEstadoCidade";
@@ -27,7 +19,11 @@ const Food: React.FC<FoodProps> = ({ id, delFood }) => {
     IAlimentoLista[]
   >([]);
   const [listaAlimentos, setListaAlimentos] = useState<IAlimento[]>([]);
-  const [alimentoSelecionado, setAlimentoSelecionado] = useState<IAlimento>();
+
+  const [selectedCategoria, setSelectedCategoria] = useState<string>("0");
+  const [selectedAlimentoId, setSelectedAlimentoId] = useState<string>("0");
+
+  const [medida, setMedida] = useState<string | undefined>("");
 
   useEffect(() => {
     api
@@ -36,44 +32,46 @@ const Food: React.FC<FoodProps> = ({ id, delFood }) => {
       .catch((err) => console.log("Error: " + err));
   }, []);
 
+  // 2. Atualiza a lista de ALIMENTOS quando a CATEGORIA muda
   useEffect(() => {
-    if (listaCategoriaAlimentos.length > 0) {
+    const categoriaNum = parseInt(selectedCategoria);
+    if (categoriaNum > 0) {
       const alimentos =
         listaCategoriaAlimentos.find(
-          (alimentos) => alimentos.cd_tipo_alimento === 1
+          (alimentos) => alimentos.cd_tipo_alimento === categoriaNum
         )?.alimentos || [];
-      alimentos.sort((a, b) => a.id.localeCompare(b.id));
+      alimentos.sort((a, b) => a.nm_alimento.localeCompare(b.nm_alimento));
       setListaAlimentos(alimentos);
+    } else {
+      setListaAlimentos([]);
     }
-  }, [listaCategoriaAlimentos]);
+    setSelectedAlimentoId("0");
+    setMedida("");
+  }, [selectedCategoria, listaCategoriaAlimentos]);
 
+  // 3. Atualiza a UNIDADE DE MEDIDA quando o ALIMENTO muda
   useEffect(() => {
-    if (listaAlimentos.length > 0) {
-      const alimento = listaAlimentos.find((alimentos) => alimentos.id);
-      setAlimentoSelecionado(alimento);
+    if (selectedAlimentoId !== "0") {
+      const alimento = listaAlimentos.find(
+        (alimento) => alimento.id === selectedAlimentoId
+      );
+      setMedida(alimento?.sg_medida_alimento);
+    } else {
+      setMedida("");
     }
-  }, [listaAlimentos]);
+  }, [selectedAlimentoId, listaAlimentos]);
 
+  // Handlers para atualizar o estado
   const handleChangeTipoAlimentoSelecionado = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
-    const selectedTipo = parseInt(event.target.value);
-    const alimentos =
-      listaCategoriaAlimentos.find(
-        (alimentos) => alimentos.cd_tipo_alimento === selectedTipo
-      )?.alimentos || [];
-    alimentos.sort((a, b) => a.id.localeCompare(b.id));
-    setListaAlimentos(alimentos);
+    setSelectedCategoria(event.target.value);
   };
 
   const handleChangeAlimentoSelecionado = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
-    const selecteIdAlimento = event.target.value;
-    const alimento = listaAlimentos.find(
-      (alimento) => alimento.id === selecteIdAlimento
-    );
-    setAlimentoSelecionado(alimento);
+    setSelectedAlimentoId(event.target.value);
   };
 
   return (
@@ -83,6 +81,7 @@ const Food: React.FC<FoodProps> = ({ id, delFood }) => {
         <select
           className="input-form tpf"
           name="cd_tipo_alimento"
+          value={selectedCategoria}
           onChange={handleChangeTipoAlimentoSelecionado}
         >
           <option value="0" disabled>
@@ -104,7 +103,9 @@ const Food: React.FC<FoodProps> = ({ id, delFood }) => {
         <select
           className="input-form alimentoInput"
           name="id"
+          value={selectedAlimentoId}
           onChange={handleChangeAlimentoSelecionado}
+          disabled={listaAlimentos.length === 0}
         >
           <option value="0" disabled>
             Selecione um alimento
@@ -126,9 +127,7 @@ const Food: React.FC<FoodProps> = ({ id, delFood }) => {
             min="1"
             name="qt_alimento_meta"
           />
-          <h1 className="sub titulo medidaAlimento">
-            {alimentoSelecionado?.sg_medida_alimento}
-          </h1>
+          <h1 className="sub titulo medidaAlimento">{medida}</h1>
         </div>
       </div>
 
@@ -138,34 +137,6 @@ const Food: React.FC<FoodProps> = ({ id, delFood }) => {
     </div>
   );
 };
-
-// interface ICidade {
-//     "municipio-id": number,
-//     "municipio-nome": string,
-//     "microrregiao-id": number,
-//     "microrregiao-nome": string,
-//     "mesorregiao-id": number,
-//     "mesorregiao-nome": string,
-//     "regiao-imediata-id": number,
-//     "regiao-imediata-nome": string,
-//     "regiao-intermediaria-id": number,
-//     "regiao-intermediaria-nome": string,
-//     "UF-id": number,
-//     "UF-sigla": string,
-//     "UF-nome": string,
-//     "regiao-id": number,
-//     "regiao-sigla": string,
-//     "regiao-nome": string,
-// }
-
-// interface IEstado {
-//     "UF-id": number,
-//     "UF-sigla": string,
-//     "UF-nome": string,
-//     "regiao-id": number,
-//     "regiao-sigla": string,
-//     "regiao-nome": string,
-// }
 
 export const CriacaoCampanha = () => {
   const [qtAlimentos, setQtAlimentos] = useState<number>(1);
@@ -189,44 +160,6 @@ export const CriacaoCampanha = () => {
       navigate("/login");
     }
   }, [user, navigate]);
-
-  // async function fetchStatesAndCities() {
-  //     try {
-  //         const estadosResponse = await axios.get<IEstado[]>('https://servicodados.ibge.gov.br/api/v1/localidades/estados?view=nivelado&orderBy=nome');
-
-  //         const estados = estadosResponse.data;
-
-  //         const estadosCidades: IEstadoCidades[] = [];
-
-  //         for (const state of estados) {
-  //             const stateAbbreviation = state['UF-sigla'];
-  //             const citiesResponse = await axios.get<ICidade[]>(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${stateAbbreviation}/municipios?view=nivelado&orderBy=nome`);
-  //             const cities = citiesResponse.data;
-
-  //             estadosCidades.push({
-  //                 sg_estado: state['UF-sigla'],
-  //                 cidades: cities.map(city => city['municipio-nome'])
-  //             });
-  //         }
-
-  //         return estadosCidades;
-  //     } catch (error) {
-  //         console.error('Erro ao buscar estados e cidades:', error);
-  //         return null;
-  //     }
-  // }
-
-  // (async () => {
-  //     try {
-  //         const estadosCidades = await fetchStatesAndCities();
-  //         if (estadosCidades) {
-  //             setListaEstadosCidades(estadosCidades)
-  //             // Faça o que quiser com os dados obtidos
-  //         }
-  //     } catch (error) {
-  //         console.error('Erro ao buscar estados e cidades:', error);
-  //     }
-  // })();
 
   const handleChangeEstadoSelecionado = (
     event: React.ChangeEvent<HTMLSelectElement>
